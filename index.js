@@ -3,10 +3,8 @@
 // Libs:
 require('dotenv').config();
 const Discord   = require('discord.js');
-const http      = require('http');
 const fs        = require('fs');
 const cron      = require('cron');
-const port      = 3000;
 const client    = new Discord.Client({ disableMentions: 'everyone' });
 client.commands = new Discord.Collection();
 
@@ -75,16 +73,7 @@ let pushToGithub = new cron.CronJob('10 0 * * *', async () => {
 // Moderation timeout check : (each 30s)
 setInterval(function() {checkTimeout(client)},30000)
 
-// Ah, ha, ha, ha, stayin' alive, stayin' alive
-// Ah, ha, ha, ha, stayin' alive
-// Corona says no ~Domi04151309
-const server = http.createServer((req, res) => {
-	res.writeHead(302, {
-		'Location': 'https://compliancepack.net/'
-	});
-	res.end();
-});
-server.listen(3000, () => console.log(`listening at http://localhost:${port}`));
+require('./webapp/app')
 
 // Bot status:
 client.on('ready', async () => {

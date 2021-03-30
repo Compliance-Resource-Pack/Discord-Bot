@@ -24,7 +24,7 @@ ___
 - Open your console in the cloned repository.
 - To complete the installation, write the following command in the console:
 ```console
-npm install
+npm install --save-dev
 ```
 - After installation, you will need to **[configure the bot](#bot-config:)**.
 - To start the bot, write the following command in the console:
@@ -33,6 +33,19 @@ node .
 ```
 - Or when you're on Windows, you can just open the `start.bat` file
 
+___
+###   Web app:
+
+To only start web app :
+
+```
+npm run webapponly
+```
+
+And go to :
+```
+http://localhost:3000/webapp
+```
 ___
 ### Bot config:
 

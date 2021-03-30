@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <link rel="shortcut icon" href="https://compliancepack.net/favicon.ico" type="image/x-icon">
+  <title>Compliance Web app</title>
+</head>
+<body>
+  <div id="app">
+    <v-app dark style="background-color: #88492a; background-image: url(https://compliancepack.net/image/background/bg_dark_foreground.png);">
+    
+      <v-app-bar app color="#22a831" >
+        <img src="https://compliancepack.net/image/home/logo.png" style="height: 40px; filter: brightness(0) invert(1);"><span class="headline"> Web app</span>
+      </v-app-bar>
+    
+      <!-- Sizes your content based upon application components -->
+      <v-main>
+    
+        <!-- Provides the application the proper gutter -->
+        <v-container fluid class="d-flex align-center justify-center" style="height: 100%;">
+          <v-card width="600" class="rounded-0" style="background: #88492a;">
+            <v-card-title>
+              Add a contributor
+            </v-card-title>
+
+            <v-card-text>
+              <v-form lazy-validation>
+                <v-select required v-model="formData.edition" :items="editions" label="Modpack edition"></v-select>
+
+                <v-select required v-model="formData.resolution" :items="resolutions" label="Modpack edition"></v-select>
+
+                <v-text-field required clearable v-model="formData.texturePath" label="Texture path"></v-text-field>
+
+                <v-radio-group row v-model="formData.addOrRemove">
+                  <v-radio
+                    v-for="(label, index) in addOrRemoveLabels"
+                    :key="label"
+                    :label="label"
+                    :value="index"
+                  ></v-radio>
+                </v-radio-group>
+
+                <v-text-field required clearable v-model="formData.discordTag" label="Author discord tag"></v-text-field>
+                
+                <v-checkbox required v-model="formData.update" :label="`Push JSON to GitHub : ${formData.update ? 'yes' : 'no'}`"></v-checkbox>
+
+                <v-btn color="success" class="mr-4" block @click="send">Validate</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        editions: ['java', 'bedrock'],
+        resolutions: ['c32', 'c64'],
+        addOrRemoveLabels: ['Add author', 'Remove author'],
+        formData : {
+          edition: 'java',
+          resolution: 'c32',
+
+          texturePath: '/item/bucket',
+
+          addOrRemove: 0,
+          discordTag: 'TheRolf#8604',
+          
+          update: true,
+        }
+      },
+      methods: {
+        send() {
+          const data = this.formData
+
+          console.log(data)
+          
+          axios.post('http://localhost:3000/contributor', data)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
+      },
+      vuetify: new Vuetify({
+        theme: { dark: true },
+      }),
+    })
+  </script>
+</body>
+</html>

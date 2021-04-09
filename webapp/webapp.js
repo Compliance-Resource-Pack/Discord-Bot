@@ -21,7 +21,13 @@ let v = new Vue({
       { to : "/contributors/", label : "Contributors" }
     ],
     currenttab: undefined,
-    bg: 'transparent'
+    bg: 'transparent',
+    snackbar: {
+      show: false,
+      message: '',
+      color: '#222',
+      timeout: 20000
+    }
   },
   computed: {
     tabselected: function() {
@@ -53,6 +59,12 @@ let v = new Vue({
       } else {
         this.bg = 'transparent';
       }
+    },
+    showSnackBar: function(message, color = '#222', timeout = 2000) {
+      this.snackbar.message = message
+      this.snackbar.color = color
+      this.snackbar.timeout = timeout
+      this.snackbar.show = true
     }
   },
   mounted: function() {

@@ -30,6 +30,16 @@
     <v-bottom-navigation height="42px" id="bottom">
       &copy; Compliance Team {{ year }}
     </v-bottom-navigation>
+
+    <v-snackbar
+      v-model="snackbar.show"
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      bottom
+      right
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-app>
 
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

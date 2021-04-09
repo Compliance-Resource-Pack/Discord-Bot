@@ -124,6 +124,20 @@ export default {
         this.$router.push(newPath)
       }
     },
+    getTypes: function() {
+      axios.get('/contributors/types')
+      .then((response) => {
+        this.types = response.data
+      })
+      .catch(function (error) {
+        console.error(error);
+      })
+      .finally(() => {
+        Vue.nextTick(() => {
+          this.search = this.name
+        })
+      })
+    },
     getContributors: function() {
       axios.get(this.$route.path)
       .then((response) => {
@@ -141,8 +155,13 @@ export default {
       this.dialogOpen = true
       this.dialogData = data
     },
-    disableDialog: function() {
+    disableDialog: function(refresh = false) {
       this.dialogOpen = false
+
+      if(refresh) {
+        this.getTypes()
+        this.getContributors()
+      }
     }
   },
   computed: {
@@ -195,20 +214,7 @@ export default {
     }
   },
   mounted: function() {
-
-    axios.get('/contributors/types')
-    .then((response) => {
-      this.types = response.data
-    })
-    .catch(function (error) {
-      console.error(error);
-    })
-    .finally(() => {
-      Vue.nextTick(() => {
-        this.search = this.name
-      })
-    })
-
+    this.getTypes()
     this.getContributors()
   }
 }

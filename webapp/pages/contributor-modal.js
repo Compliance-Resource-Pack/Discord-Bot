@@ -93,11 +93,14 @@ export default {
       data.password = TwinBcrypt.hashSync(data.password)
       
       axios.post('/contributors/change', data)
-      .then(function (response) {
-        console.log(response);
+      .then(_response => {
+        this.$root.showSnackBar('Ended successully', 'success')
+        this.disableDialog(true)
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(error => {
+        console.error(error)
+        this.$root.showSnackBar(`${error.message} : ${error.response.data.error}`, 'error')
+        this.disableDialog(true)
       });
     }
   },

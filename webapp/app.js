@@ -2,6 +2,8 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require("body-parser");
 const backend = require('./ContributorBackend')
+const TwinBcrypt = require('twin-bcrypt')
+require('dotenv').config()
 
 const port = 3000;
 
@@ -101,7 +103,6 @@ function GetContributors(req, res) {
     req.params.type = req.params.name
     req.params.name = tmp
   }
-  console.log(req.params)
   backend.contributors.get(req.params.name, req.params.type)
   .then(val => {
     res.setHeader('Content-Type', 'application/json')
@@ -120,11 +121,18 @@ function GetContributors(req, res) {
 app.get('/contributors/:type?/:name?/?', GetContributors)
 
 app.post('/contributors/change', function(req, res) {
+  if(!req.body.password || !process.env.WEBAPP_PASSWORD || !TwinBcrypt.compareSync(process.env.WEBAPP_PASSWORD, req.body.password)) {
+    res.status(400)
+    res.end()
+    return
+  }
+  
   backend.contributors.change(req.body)
   .then(() => {
     res.status(200);
   })
-  .catch(()=> {
+  .catch(err => {
+    console.error(err)
     res.status(400);
   })
   .finally(() => {

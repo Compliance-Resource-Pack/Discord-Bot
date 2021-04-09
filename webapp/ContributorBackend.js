@@ -106,12 +106,53 @@ module.exports = {
 
     /**
      * 
-     * @param {Contributor} contributor Contributor object
+     * @param {Contributor} newContrib Contributor object
      * @returns {Promise}
      */
-    change: function(contributor) {
-      console.log(contributor);
-      return Promise.resolve();
+    change: function(newContrib) {
+      console.log(newContrib);
+      
+      return new Promise((resolve, reject) => {
+        fsprom.readFile(PROFILE_JSON)
+        .then((val) => {
+          /**
+           * @type {Array<Contributor>}
+           */
+          const contributors = JSON.parse(val)
+
+          // try to find it
+          let contributorIndex = -1
+          let i = 0
+          while(i < contributors.length && contributorIndex == -1) {
+            if(contributors[i].username.toLowerCase() === newContrib.username.toLowerCase()) {
+              contributorIndex = i
+            }
+  
+            ++i
+          }
+
+          Object.keys(newContrib).forEach(key => {
+            if(!['username', 'type', 'uuid', 'id'].includes(key))
+              delete newContrib[key]
+            })
+  
+          // push it if not found
+          if(contributorIndex == -1)
+            contributors.push(newContrib)
+          else // else change it
+          Object.keys(newContrib).forEach(key => {
+            contributors[contributorIndex][key] = newContrib[key]
+          })
+            
+  
+          fsprom.writeFile(PROFILE_JSON, JSON.stringify(contributors, null, 2))
+          .then(() => resolve())
+          .catch(err => reject(err))
+        })
+        .catch(err => {
+          reject(err)
+        })
+      })
     }
   }
 }

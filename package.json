@@ -35,7 +35,8 @@
     "http": "0.0.1-security",
     "image-size": "^0.9.7",
     "node-fetch": "^2.6.1",
-    "simple-git": "^2.37.0"
+    "simple-git": "^2.37.0",
+    "twin-bcrypt": "^2.1.1"
   },
   "engines": {
     "node": "14.16.0",

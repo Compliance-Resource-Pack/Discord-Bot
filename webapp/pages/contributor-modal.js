@@ -39,7 +39,7 @@ export default {
           <v-btn
             color="darken-1"
             text
-            @click="disableDialog"
+            @click="send"
           >
             Save
           </v-btn>
@@ -77,7 +77,8 @@ export default {
         username: '',
         type: undefined,
         uuid: '',
-        password: 'NeverGonnaGiveYouUp'
+        password: 'NeverGonnaGiveYouUp',
+        pushToGithub: true
       }
 		}
 	},
@@ -87,6 +88,18 @@ export default {
     }
   },
   methods: {
+    send: function() {
+      const data = JSON.parse(JSON.stringify(this.formData))
+      data.password = TwinBcrypt.hashSync(data.password)
+      
+      axios.post('/contributors/change', data)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
   },
   watch: {
     dialog: function(newValue, oldValue) {

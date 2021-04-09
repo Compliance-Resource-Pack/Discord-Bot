@@ -153,6 +153,46 @@ module.exports = {
           reject(err)
         })
       })
+    },
+
+    /**
+     * 
+     * @param {String} username user to remove
+     */
+    remove: function(username) {
+      return new Promise((resolve, reject) => {
+        fsprom.readFile(PROFILE_JSON)
+        .then((val) => {
+          /**
+           * @type {Array<Contributor>}
+           */
+          const contributors = JSON.parse(val)
+
+          // try to find it
+          let contributorIndex = -1
+          let i = 0
+          while(i < contributors.length && contributorIndex == -1) {
+            if(contributors[i].username.toLowerCase() === username.toLowerCase()) {
+              contributorIndex = i
+            }
+  
+            ++i
+          }
+  
+          // push it if not found
+          if(contributorIndex == -1)
+            reject(new Error('Not found'))
+          else // else rmeove it
+            contributors.splice(contributorIndex, 1)
+  
+          fsprom.writeFile(PROFILE_JSON, JSON.stringify(contributors, null, 2))
+          .then(() => resolve())
+          .catch(err => reject(err))
+        })
+        .catch(err => {
+          reject(err)
+        })
+      })
     }
   }
 }

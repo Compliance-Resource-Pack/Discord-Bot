@@ -146,3 +146,30 @@ app.post('/contributors/change', function(req, res) {
     res.end()
   })
 })
+
+app.post('/contributors/remove', function(req, res) {
+  if(!req.body.password || !process.env.WEBAPP_PASSWORD || !TwinBcrypt.compareSync(process.env.WEBAPP_PASSWORD, req.body.password)) {
+    res.status(400)
+    res.end()
+    return
+  }
+
+  const push = !!req.body.pushToGithub
+
+  backend.contributors.remove(req.body.username)
+  .then(() => {
+    if(push) {
+      console.error('puuush it')
+      res.status(500).send({error: 'Saved but you need to push it'})
+      res.end()
+    } else {
+      res.status(200)
+      res.end()
+    }
+  })
+  .catch(err => {
+    console.error(err)
+    res.status(400)
+    res.end()
+  })
+})

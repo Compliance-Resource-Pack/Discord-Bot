@@ -1,9 +1,11 @@
 const ContributorModal = () => import('./contributor-modal.js')
+const ContributorRemoveConfirm = () => import('./contributor-remove-confirm.js')
 
 export default {
 	name: 'contributor-page',
   components: {
-    ContributorModal
+    ContributorModal,
+    ContributorRemoveConfirm
   },
 	template: `
     <v-container>
@@ -57,12 +59,18 @@ export default {
                   <v-icon color="white lighten-1">mdi-pencil</v-icon>
                 </v-btn>
               </v-list-item-action>
+              <v-list-item-action>
+                <v-btn icon @click="askRemove(contrib.username)">
+                  <v-icon color="white lighten-1">mdi-delete</v-icon>
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
           </v-col></v-row>
         </v-list>
         <div v-else><i>No results found.</i></div>
         </div>
       </div>
+      <contributor-remove-confirm :confirm="remove.confirm" :disableDialog="function() { remove.confirm = false; update() }" :username="remove.username"></contributor-remove-confirm>
     </v-container>`,
 	data() {
 		return {
@@ -78,7 +86,11 @@ export default {
       },
       contributors: [],
       dialogOpen: false,
-      dialogData: {}
+      dialogData: {},
+      remove: {
+        confirm: false,
+        username: ''
+      }
 		}
 	},
   methods: {
@@ -147,6 +159,10 @@ export default {
         console.error(error)
       })
     },
+    update: function() {
+      this.getTypes()
+      this.getContributors()
+    },
     clearSearch: function() {
       this.search = ''
       this.startSearch()
@@ -162,6 +178,10 @@ export default {
         this.getTypes()
         this.getContributors()
       }
+    },
+    askRemove: function(username) {
+      this.remove.confirm = true
+      this.remove.username = username
     }
   },
   computed: {
@@ -214,7 +234,6 @@ export default {
     }
   },
   mounted: function() {
-    this.getTypes()
-    this.getContributors()
+    this.update()
   }
 }

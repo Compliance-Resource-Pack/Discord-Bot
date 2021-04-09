@@ -126,16 +126,23 @@ app.post('/contributors/change', function(req, res) {
     res.end()
     return
   }
+
+  const push = !!req.body.pushToGithub
   
   backend.contributors.change(req.body)
   .then(() => {
-    res.status(200);
+    if(push) {
+      console.error('puuush it')
+      res.status(500).send({error: 'Saved but you need to push it'})
+      res.end()
+    } else {
+      res.status(200)
+      res.end()
+    }
   })
   .catch(err => {
     console.error(err)
-    res.status(400);
-  })
-  .finally(() => {
+    res.status(400)
     res.end()
   })
 })

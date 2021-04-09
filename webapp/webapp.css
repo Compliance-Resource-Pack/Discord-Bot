@@ -1,0 +1,37 @@
+a { text-decoration: none; }
+
+.noselect, .noselect * {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#app {
+  background: #120E19 url(https://compliancepack.net/image/background/the_end.jpg) no-repeat center;
+  background-attachment: fixed;
+}
+
+#app .v-toolbar {
+  border-bottom: 2px solid rgba(0,0,0,0.5)
+}
+
+#app .v-tabs {
+  width: auto;
+}
+#app .v-tab {
+  height: 100%;
+  line-height: 48px;
+  text-transform: none;
+}
+
+.selected {
+  background-color: #22202c;
+}
+
+#bottom {
+  overflow: hidden;
+  line-height: 42px;
+  background: transparent;
+}

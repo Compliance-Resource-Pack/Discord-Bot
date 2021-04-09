@@ -13,7 +13,7 @@ export default {
             <v-col v-if="formData.uuid" class="col-2" :sm="$vuetify.breakpoint.mdAndUp ? 3 : 2">
               <img alt="avatar" style="width: 100%; max-width: 250" :src="($vuetify.breakpoint.mdAndUp ? 'https://crafatar.com/renders/body/' : 'https://crafatar.com/renders/head/') + formData.uuid + '?default=MHF_Alex&scale=10&overlay'" />
             </v-col><v-col :class="'col-' + formData.uuid ? '10' : '12'" :sm="formData.uuid ? ($vuetify.breakpoint.mdAndUp ? 9 : 10) : 12">
-              <v-form lazy-validation>
+              <v-form ref="form" lazy-validation>
                 <v-text-field required clearable v-model="formData.username" label="Username"></v-text-field>
 
                 <v-select required v-model="formData.type" :items="types" label="Contributor type"></v-select>
@@ -107,9 +107,19 @@ export default {
   watch: {
     dialog: function(newValue, oldValue) {
       if(oldValue != newValue && newValue == true) {
-        const keys = Object.keys(this.data)
-        keys.forEach(key => {
-          this.formData[key] = this.data[key]
+        const pass = this.formData.password
+        Vue.nextTick(() => {
+          this.$refs.form.reset()
+          Vue.nextTick(() => {
+            this.formData.password = pass
+          })
+
+          if(!this.add) {
+            const keys = Object.keys(this.data)
+            keys.forEach(key => {
+              this.formData[key] = this.data[key]
+            })
+          }
         })
       }
     }

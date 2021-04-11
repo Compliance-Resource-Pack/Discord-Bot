@@ -1,7 +1,8 @@
 const path = require('path')
 const express = require('express')
 const bodyParser = require("body-parser");
-const backend = require('./ContributorBackend')
+const contributor = require('./ContributorBackend')
+const contributions = require('./backend/contribution')
 const TwinBcrypt = require('twin-bcrypt')
 require('dotenv').config()
 
@@ -38,19 +39,10 @@ app.post('/contributor', function(req, res) {
   res.end()
 })
 
-app.get('/contributions?/:edition/:path?/?', function(req, res) {
-  /**
-   * options
-   * @type { import('./ContributorBackend').FilterOptions }
-   */
-  const options = {
-    edition: req.params.edition
-  }
-  if(req.params.path)
-    options.path = req.params.path
-
-  backend.get(options)
+app.get('/contributions/:edition?/:search?/', function(req, res) {
+  contributions.get(req.params.edition, req.params.search)
   .then(val => {
+    console.log(val)
     res.setHeader('Content-Type', 'application/json')
     res.send(val)
   })
@@ -67,7 +59,7 @@ app.get('/contributions?/:edition/:path?/?', function(req, res) {
 let lastTypes = undefined
 
 app.get('/contributors/types', function(req, res) {
-  backend.contributors.types()
+  contributor.contributors.types()
   .then(val => {
     res.setHeader('Content-Type', 'application/json')
     lastTypes = val
@@ -90,7 +82,7 @@ app.get('/contributors/types', function(req, res) {
  */
 function GetContributors(req, res) {
   if(!lastTypes) {
-    backend.contributors.types()
+    contributor.contributors.types()
     .then(val => {
       lastTypes = val
       GetContributors(req, res)
@@ -103,7 +95,7 @@ function GetContributors(req, res) {
     req.params.type = req.params.name
     req.params.name = tmp
   }
-  backend.contributors.get(req.params.name, req.params.type)
+  contributor.contributors.get(req.params.name, req.params.type)
   .then(val => {
     res.setHeader('Content-Type', 'application/json')
     res.send(val)
@@ -129,7 +121,7 @@ app.post('/contributors/change', function(req, res) {
 
   const push = !!req.body.pushToGithub
   
-  backend.contributors.change(req.body)
+  contributor.contributors.change(req.body)
   .then(() => {
     if(push) {
       console.error('puuush it')
@@ -156,7 +148,7 @@ app.post('/contributors/remove', function(req, res) {
 
   const push = !!req.body.pushToGithub
 
-  backend.contributors.remove(req.body.username)
+  contributor.contributors.remove(req.body.username)
   .then(() => {
     if(push) {
       console.error('puuush it')

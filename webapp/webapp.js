@@ -6,7 +6,7 @@ Vue.config.devtools = location.hostname === 'localhost' || location.hostname ===
 const routes = [
 	{ path: '/', redirect: '/contributions/java/' },
 	{ path: '/contributions/', redirect: '/contributions/java/' },
-	{ path: '/contributions?/:edition/:path?/?', component: ContributionPage },
+	{ path: '/contributions/:edition?/:search?/', component: ContributionPage },
   { path: '/contributors/:type?/:name?/', component: ContributorPage }
 ]
 

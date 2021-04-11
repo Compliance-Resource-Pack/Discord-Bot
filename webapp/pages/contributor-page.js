@@ -10,13 +10,13 @@ export default {
 	template: `
     <v-container>
       <contributor-modal :dialog="dialogOpen" :disableDialog="disableDialog" :add="Object.keys(dialogData).length == 0" :data="dialogData" :types="types"></contributor-modal>
-      <div class="text-h4 py-0">
+      <div class="text-h4 py-4">
         Contributors
       </div>
       <div>
         <div class="my-2 text-h5">Select contributor type</div>
         <div><v-btn v-for="t in contributorTypes" :key="t" :class="{ 'my-2': true, 'mr-1': true, 'v-btn--active': t === 'All' && !type && !!name }" :to="contributorURL(t)" :exact="t == 'All'">{{ t }}</v-btn></div>
-        <div class="my-2 text-h5">Search username</div>
+        <div class="my-2 text-h5">Search</div>
         <div class="my-2">
           <v-text-field
             v-model="search"
@@ -24,12 +24,13 @@ export default {
             filled
             clear-icon="mdi-close"
             clearable
-            label="Username"
+            placeholder="Search username"
             type="text"
             v-on:keyup.enter="startSearch"
             @click:append-outer="startSearch"
             @click:clear="clearSearch"
-        ></v-text-field>
+          ></v-text-field>
+        </div>
 
         <v-btn block color="secondary" @click="openDialog()">Add new Contributor <v-icon right dark>mdi-plus</v-icon></v-btn>
 
